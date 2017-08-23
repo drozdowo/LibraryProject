@@ -1,0 +1,103 @@
+<link href="./onlibrary.css" rel="stylesheet" type="text/css">
+<script src="./jquery-3.2.1.min.js"></script>
+    <div class="container">
+        <div class="header">
+            <div class="imgcontainer">
+                <a class="aimg" href="./index.html"> <img src="./img/Logo.png"/> </a>
+            </div>
+            <div class="headercontentcontainer">
+                <div  id='userinfo' class="headercontent">
+                </div>
+            </div>
+        </div>
+        <div class="contentcontainer">
+            <div class="notifyareacontainer">
+                <div id="notifyme" class="notifyarea">
+                </div>
+            </div>
+            <div class="content">
+                <div class="loginformcontainer">
+                    <div class="loginform">
+                        <table>
+                            <tr> 
+                                <td> Username: </td> <td> <input id="username" type="text"/> </td>
+                            </tr>
+                            <tr> 
+                                <td> Password: </td> <td> <input id="password" type="password"/> </td>
+                            </tr>
+                            <tr> 
+                                <td> Email: </td> <td> <input id="email" type="text"/> </td>
+                            </tr>
+                            <tr> 
+                                <td> Phone Number: </td> <td> <input id="phonenumber" type="text"/> </td>
+                            </tr>
+                        </table>
+                        <div style="padding-top: 15px;">
+                            <input style="width:100%;" id="registerbutton" type="button" value="Register"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            OnLibrary - Final Project for 60-344 by Oliver Drozdowski
+        </div>
+    </div>
+
+    <script>
+
+    $(document).ready(function(){
+        $("#registerbutton").click(function(){
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var email = document.getElementById('email').value;
+            var phonenumber = document.getElementById('phonenumber').value;
+
+            if (username.length > 5 && password.length > 5 && email.length > 5 && phonenumber.length > 5){
+             var mydata = {};
+             mydata['username'] = username;
+             mydata['password'] = password;
+             mydata['email'] = email;
+             mydata['phonenumber'] = phonenumber;
+
+            $.ajax({
+                type: "POST",
+                url: './php/register.php',
+                data: mydata,
+                success: function(response){
+                    document.getElementById('notifyme').innerHTML = response;
+                }
+            });
+            } else {
+                var errorMsg = 'Error! \<br\>';
+                //error stuff here
+                document.getElementById('notifyme').innerHTML = errorMsg;
+            }
+        });
+
+        $('#userinfo').ready(function(){
+        $.ajax({
+            type: "GET",
+            url: "./php/usermanager.php",
+            success: function(response){
+                document.getElementById('userinfo').innerHTML = response;
+            }
+        })
+    });
+});
+
+
+    function logout(){
+        console.log('logout');
+        $.ajax({
+        type: "GET",
+        url: "./php/usermanager.php?logout=1",
+        success: function(response){
+            document.getElementById('userinfo').innerHTML = response;
+        }});
+    }
+
+    function gotomybooks(){
+        location.href='./mybooks.html';
+    }
+    </script>

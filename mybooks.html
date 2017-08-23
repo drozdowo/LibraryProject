@@ -1,0 +1,80 @@
+<link href="./onlibrary.css" rel="stylesheet" type="text/css">
+<script src="./jquery-3.2.1.min.js"></script>
+    <div class="container">
+        <div class="header">
+            <div class="imgcontainer">
+                <a class="aimg" href="./index.html">  <img src="./img/Logo.png"/> </a>
+            </div>
+            <div class="headercontentcontainer">
+                <div  id='userinfo' class="headercontent">
+                </div>
+            </div>
+        </div>
+        <div class="contentcontainer">
+            <div class="content">
+                
+            <div id="mybooksresponse" class="searchformresultcontainer"/>
+
+        </div>
+        </div>
+        </div>
+        <div class="footer">
+            OnLibrary - Final Project for 60-344 by Oliver Drozdowski
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function(){
+            $.ajax({
+                type: "GET",
+                url: "./php/mybooks.php",
+                success: function(response){
+                    document.getElementById('mybooksresponse').innerHTML = response;
+                }
+            });
+        });
+
+         $('#userinfo').ready(function(){
+         $.ajax({
+            type: "GET",
+            url: "./php/usermanager.php",
+            success: function(response){
+                document.getElementById('userinfo').innerHTML = response;
+            }});
+            });
+
+
+    function logout(){
+        console.log('logout');
+        $.ajax({
+        type: "GET",
+        url: "./php/usermanager.php?logout=1",
+        success: function(response){
+            document.getElementById('userinfo').innerHTML = response;
+        }});
+    }
+
+    function gotomybooks(){
+        location.href='./mybooks.html';
+    }
+
+    function returnBook(isbn){
+        var myData = {};
+        myData['isbn'] = isbn;
+        $.ajax({
+            type: "POST",
+            url: "./php/return.php",
+            data: myData,
+            success: function(response){
+            $.ajax({
+                type: "GET",
+                url: "./php/mybooks.php",
+                success: function(response){
+                    document.getElementById('mybooksresponse').innerHTML = response;
+                }
+            });
+            }
+        });
+    }
+    </script>

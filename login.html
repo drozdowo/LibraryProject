@@ -1,0 +1,84 @@
+<link href="./onlibrary.css" rel="stylesheet" type="text/css">
+<script src="./jquery-3.2.1.min.js"></script>
+    <div class="container">
+        <div class="header">
+            <div class="imgcontainer">
+               <a class="aimg" href="./index.html">  <img src="./img/Logo.png"/> </a>
+            </div>
+            <div class="headercontentcontainer">
+                <div id='userinfo' class="headercontent">
+                </div>
+            </div>
+        </div>
+        <div class="contentcontainer">
+            <div class="content">
+                <div class="notifyareacontainer"><div id="notifyme" class="notifyarea"></div></div>
+                <div class="loginformcontainer">
+                    <div class="loginform">
+                        <table>
+                            <tr> 
+                                <td> User: </td> <td> <input id="username" type="text"/> </td>
+                            </tr>
+                            <tr> 
+                                <td> Password: </td> <td> <input id="password" type="password"/> </td>
+                            </tr>
+                        </table>
+                        <div style="padding-top: 15px;">
+                            <input class="loginbutton" type="button" onclick="location.href='./register.html'" value="Register"/><input id="loginbutton" class="loginbutton" type="button" value="Log In"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            OnLibrary - Final Project for 60-344 by Oliver Drozdowski
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function(){
+            $('#loginbutton').click(function(){
+                var username = document.getElementById('username').value;
+                var password = document.getElementById('password').value;
+                var loginData = {};
+                loginData['username'] = username;
+                loginData['password'] = password;
+                $.ajax({
+                    type: 'POST',
+                    url: './php/login.php',
+                    data: loginData,
+                    success: function(response){
+                        document.getElementById("notifyme").innerHTML = response;
+                        if (response.indexOf('Succ') !== -1){
+                            location.reload();
+                        }
+                    }
+                });
+            });
+
+        $('#userinfo').ready(function(){
+         $.ajax({
+            type: "GET",
+            url: "./php/usermanager.php",
+            success: function(response){
+                document.getElementById('userinfo').innerHTML = response;
+            }});
+            });
+        });
+
+
+    function logout(){
+        console.log('logout');
+        $.ajax({
+        type: "GET",
+        url: "./php/usermanager.php?logout=1",
+        success: function(response){
+            document.getElementById('userinfo').innerHTML = response;
+        }});
+    }
+    
+    function gotomybooks(){
+        location.href='./mybooks.html';
+    }
+    </script>

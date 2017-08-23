@@ -1,0 +1,172 @@
+<link href="./onlibrary.css" rel="stylesheet" type="text/css">
+<script src="./jquery-3.2.1.min.js"></script>
+    <div class="container">
+        <div class="header">
+            <div class="imgcontainer">
+                <a class="aimg" href="./index.html"> <img src="./img/Logo.png"/> </a>
+            </div>
+            <div class="headercontentcontainer">
+                <div id='userinfo' class="headercontent">
+</div>
+            </div>
+        </div>
+        <div class="contentcontainer">
+            <div class="content">
+                <div class="searchformcontainer">
+                    <div class="searchform">
+                        <table>
+                            <tr>
+                                <td> Book Title </td>
+                                <td> <input id="booktitle" type="text"/> </td>
+                            </tr>
+                            <tr>
+                                <td> Author </td>
+                                <td> <input id="bookauthor" type="text"/> </td>
+                            </tr>
+                            <tr>
+                                <td> Genre </td>
+                                <td> <input id="bookgenre" type="text"/> </td>
+                            </tr>
+                            <tr>
+                                <td> ISBN </td>
+                                <td> <input id="bookisbn" type="text"/> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            <div id="resultshere" class="searchformresultcontainer">
+            </div>
+            </div>
+        </div>
+        <div class="footer">
+            OnLibrary - Final Project for 60-344 by Oliver Drozdowski
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#booktitle').keyup(function(){
+                var len = document.getElementById('booktitle').value;
+                if (len.length > 2){
+                    var searchData = getData();
+                    $.ajax({
+                    type: "POST",
+                    url: "./php/search.php",
+                    data: searchData,
+                    success: function(result){
+                        document.getElementById('resultshere').innerHTML = result;
+                    }
+                });
+                }
+            });
+
+            $('#bookauthor').keyup(function(){
+                var len = document.getElementById('bookauthor').value;
+                if (len.length > 2){
+                    var searchData = getData();
+                    $.ajax({
+                    type: "POST",
+                    url: "./php/search.php",
+                    data: searchData,
+                    success: function(result){
+                        document.getElementById('resultshere').innerHTML = result;
+                    }
+                });
+                }
+            });
+
+            $('#bookisbn').keyup(function(){
+                var len = document.getElementById('bookisbn').value;
+                if (len.length > 2){
+                    var searchData = getData();
+                    $.ajax({
+                    type: "POST",
+                    url: "./php/search.php",
+                    data: searchData,
+                    success: function(result){
+                        document.getElementById('resultshere').innerHTML = result;
+                    }
+                });
+                }
+            });
+
+            $('#bookgenre').keyup(function(){
+                var len = document.getElementById('bookgenre').value;
+                if (len.length > 2){
+                    var searchData = getData();
+                    $.ajax({
+                    type: "POST",
+                    url: "./php/search.php",
+                    data: searchData,
+                    success: function(result){
+                        document.getElementById('resultshere').innerHTML = result;
+                    }
+                });
+                }
+            });
+
+            $('#userinfo').ready(function(){
+                $.ajax({
+                    type: "GET",
+                    url: "./php/usermanager.php",
+                    success: function(response){
+                        document.getElementById('userinfo').innerHTML = response;
+                    }
+                });
+            });
+        });
+
+function getData(){
+    var bookname = document.getElementById('booktitle').value;
+    var bookauthor = document.getElementById('bookauthor').value;
+    var bookisbn = document.getElementById('bookisbn').value;
+    var bookgenre = document.getElementById('bookgenre').value;
+
+    var data = {};
+
+    if (bookname.length > 2){
+        data['name'] = bookname;
+    }
+    if (bookauthor.length > 2){
+        data['author'] = bookauthor;
+    }
+    if (bookisbn.length > 2){
+        data['isbn'] = bookisbn;
+    }
+    if (bookgenre.length > 2){
+        data['genre'] = bookgenre;
+    }
+
+    console.log(data);
+    return data;
+
+}
+
+    function logout(){
+        console.log('logout');
+        $.ajax({
+        type: "GET",
+        url: "./php/usermanager.php?logout=1",
+        success: function(response){
+            document.getElementById('userinfo').innerHTML = response;
+        }});
+    }
+    
+    function borrow(isbn){
+        var mydata = {};
+        mydata['isbn'] = isbn;
+        $.ajax({
+            type: "POST",
+            url: "./php/borrow.php",
+            data: mydata,
+            success: function(response){
+                alert(response);
+            }
+        });
+    }
+
+    function gotomybooks(){
+        location.href='./mybooks.html';
+    }
+
+    </script>
